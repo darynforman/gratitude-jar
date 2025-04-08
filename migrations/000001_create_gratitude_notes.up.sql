@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS gratitude_notes (
     id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL DEFAULT 1,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     category VARCHAR(50),
