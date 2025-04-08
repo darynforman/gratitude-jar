@@ -8,6 +8,7 @@ The Gratitude Jar application uses a PostgreSQL database with a single table to 
 erDiagram
     GRATITUDE_NOTES {
         int id PK
+        int user_id
         varchar title
         text content
         varchar category
@@ -24,6 +25,7 @@ erDiagram
 | Column Name | Data Type | Constraints | Description |
 |------------|-----------|-------------|-------------|
 | id | SERIAL | PRIMARY KEY | Auto-incrementing unique identifier |
+| user_id | INTEGER | NOT NULL | Identifier for the user who created the note |
 | title | VARCHAR(255) | NOT NULL | Title of the gratitude note |
 | content | TEXT | NOT NULL | Main content of the gratitude note |
 | category | VARCHAR(50) | NULL | Category of the note (optional) |
@@ -38,6 +40,7 @@ The table is created using the following SQL migration:
 ```sql
 CREATE TABLE IF NOT EXISTS gratitude_notes (
     id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     category VARCHAR(50),
@@ -51,4 +54,5 @@ CREATE TABLE IF NOT EXISTS gratitude_notes (
 
 - The `gratitude_notes` table is a standalone table with no foreign key relationships
 - Each note is uniquely identified by its `id` field
-- The `created_at` and `updated_at` fields are automatically managed by the application 
+- The `user_id` field is used to associate notes with users (currently using a default value)
+- The `created_at` and `updated_at` fields are automatically managed by the application
