@@ -67,6 +67,20 @@ gratitude-jar/
 
 ### Database Setup
 
+You have two options for setting up the database:
+
+#### Option 1: Automated Setup (Recommended)
+
+Run the setup script:
+
+```bash
+./scripts/setup-db.sh
+```
+
+This script will create the database, user, and run all migrations automatically.
+
+#### Option 2: Manual Setup
+
 1. Create a new PostgreSQL database:
 
 ```sql
