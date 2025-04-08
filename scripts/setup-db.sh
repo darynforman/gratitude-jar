@@ -13,6 +13,12 @@ CREATE DATABASE gratitude_jar;
 CREATE USER gratitude_user WITH PASSWORD 'gratitude123';
 GRANT ALL PRIVILEGES ON DATABASE gratitude_jar TO gratitude_user;
 EOF
+    
+    # Grant schema permissions
+    psql -U postgres -d gratitude_jar << EOF
+GRANT ALL ON SCHEMA public TO gratitude_user;
+EOF
+    
     echo "✅ Database and user created successfully!"
 }
 
