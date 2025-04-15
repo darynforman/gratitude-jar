@@ -152,6 +152,7 @@ func createGratitude(w http.ResponseWriter, r *http.Request) {
 
 	// Create a new gratitude note from form data
 	note := &data.GratitudeNote{
+		UserID:    1, // Set a default user ID for now
 		Title:     title,
 		Content:   content,
 		Category:  category,

@@ -10,6 +10,7 @@ import (
 
 type GratitudeNote struct {
 	ID        int
+	UserID    int
 	Title     string
 	Content   string
 	Category  string
@@ -34,12 +35,12 @@ func (m *GratitudeModel) Insert(note *GratitudeNote) (int, error) {
 	log.Printf("Attempting to insert note with title: %s, category: %s, emoji: %s", note.Title, note.Category, note.Emoji)
 
 	query := `
-		INSERT INTO gratitude_notes (title, content, category, emoji, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO gratitude_notes (user_id, title, content, category, emoji, created_at, updated_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 		RETURNING id`
 
 	var id int
-	err := m.DB.QueryRow(query, note.Title, note.Content, note.Category, note.Emoji, note.CreatedAt, note.UpdatedAt).Scan(&id)
+	err := m.DB.QueryRow(query, note.UserID, note.Title, note.Content, note.Category, note.Emoji, note.CreatedAt, note.UpdatedAt).Scan(&id)
 	if err != nil {
 		log.Printf("Error inserting note: %v", err)
 		return 0, err
@@ -51,13 +52,14 @@ func (m *GratitudeModel) Insert(note *GratitudeNote) (int, error) {
 // Get retrieves a gratitude note by ID
 func (m *GratitudeModel) Get(id int) (*GratitudeNote, error) {
 	query := `
-		SELECT id, title, content, category, emoji, created_at, updated_at
+		SELECT id, user_id, title, content, category, emoji, created_at, updated_at
 		FROM gratitude_notes
 		WHERE id = $1`
 
 	note := &GratitudeNote{}
 	err := m.DB.QueryRow(query, id).Scan(
 		&note.ID,
+		&note.UserID,
 		&note.Title,
 		&note.Content,
 		&note.Category,
@@ -76,7 +78,7 @@ func (m *GratitudeModel) List() ([]*GratitudeNote, error) {
 	log.Printf("Attempting to list all notes")
 
 	query := `
-		SELECT id, title, content, category, emoji, created_at, updated_at
+		SELECT id, user_id, title, content, category, emoji, created_at, updated_at
 		FROM gratitude_notes
 		ORDER BY created_at DESC`
 
@@ -92,6 +94,7 @@ func (m *GratitudeModel) List() ([]*GratitudeNote, error) {
 		note := &GratitudeNote{}
 		err := rows.Scan(
 			&note.ID,
+			&note.UserID,
 			&note.Title,
 			&note.Content,
 			&note.Category,
@@ -122,10 +125,10 @@ func (m *GratitudeModel) Update(note *GratitudeNote) error {
 
 	query := `
 		UPDATE gratitude_notes 
-		SET title = $1, content = $2, category = $3, emoji = $4, updated_at = $5
-		WHERE id = $6`
+		SET user_id = $1, title = $2, content = $3, category = $4, emoji = $5, updated_at = $6
+		WHERE id = $7`
 
-	result, err := m.DB.Exec(query, note.Title, note.Content, note.Category, note.Emoji, note.UpdatedAt, note.ID)
+	result, err := m.DB.Exec(query, note.UserID, note.Title, note.Content, note.Category, note.Emoji, note.UpdatedAt, note.ID)
 	if err != nil {
 		log.Printf("Error updating note: %v", err)
 		return err
